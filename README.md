@@ -40,6 +40,11 @@ If you want, clone or download this repository:
 # Clone the repository
 $ git clone git@github.com:williamalonso/pytube.git
 ```
+Install pytube with:
+
+```python
+pip install pytube
+```
 
 To run the app, go to the specifc directory and give It the command `python name_file.py`.
 
