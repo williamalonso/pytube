@@ -1,21 +1,24 @@
-from pytube import YouTube
+from pytubefix import YouTube
+from pytubefix.cli import on_progress
 
 def baixar_video(url, caminho_destino='.'):
     try:
-        # Cria um objeto YouTube
-        video = YouTube(url)
+        # Cria um objeto YouTube com callback de progresso
+        video = YouTube(url, on_progress_callback=on_progress)
 
-        # Filtra as streams para incluir vídeo e áudio
-        stream = video.streams.filter(res='720p', progressive=True).first()
+        # Pega a melhor resolução com áudio e vídeo juntos
+        stream = video.streams.filter(progressive=True, file_extension='mp4') \
+                              .order_by('resolution') \
+                              .desc() \
+                              .first()
 
         # Verifica se a stream foi encontrada
         if stream:
-            # Baixa o vídeo
-            print(f'Baixando: {video.title} (720p)')
+            print(f'Baixando: {video.title} ({stream.resolution})')
             stream.download(output_path=caminho_destino)
             print('Download concluído com sucesso!')
         else:
-            print("Erro: Não foi possível encontrar uma stream com a qualidade 720p para o vídeo.")
+            print("Erro: Não foi possível encontrar uma stream com áudio e vídeo.")
 
     except Exception as e:
         print(f"Erro: {e}")
